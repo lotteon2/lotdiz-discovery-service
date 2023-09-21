@@ -1,5 +1,10 @@
 #!/bin/bash
 
+export ECR_REGISTRY=${ECR_REGISTRY}
+export AWS_ECR_REPOSITORY=${AWS_ECR_REPOSITORY}
+export IMAGE_TAG=${IMAGE_TAG}
+envsubst < ./deployment-prod.yml
+
 # Update AWS EKS user config
 aws eks update-kubeconfig --region ap-northeast-2 --name $AWS_EKS_CLUSTER_NAME
 
