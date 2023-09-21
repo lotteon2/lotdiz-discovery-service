@@ -3,7 +3,6 @@
 export ECR_REGISTRY=${ECR_REGISTRY}
 export AWS_ECR_REPOSITORY=${AWS_ECR_REPOSITORY}
 export IMAGE_TAG=${IMAGE_TAG}
-envsubst < ./deployment-prod.yml
 
 # Update AWS EKS user config
 aws eks update-kubeconfig --region ap-northeast-2 --name $AWS_EKS_CLUSTER_NAME
@@ -11,7 +10,7 @@ aws eks update-kubeconfig --region ap-northeast-2 --name $AWS_EKS_CLUSTER_NAME
 # Deploy kubernetes deployment resource
 if ! kubectl get deployment discovery-deployment &> /dev/null; then
   echo "Create new kubernetes deployment resources..."
-  kubectl create -f ./deployment-prod.yml
+  envsubst < ./deployment-prod.yml | kubectl apply -f -
 else
   echo "Apply new docker image "
   kubectl set image deployments/discovery-deployment discovery-service=$ECR_REGISTRY/$AWS_ECR_REPOSITORY:$IMAGE_TAG --record
