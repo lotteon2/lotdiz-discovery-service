@@ -16,6 +16,8 @@ else
   kubectl set image deployments/discovery-deployment discovery-service=$ECR_REGISTRY/$AWS_ECR_REPOSITORY:$IMAGE_TAG --record
 fi
 
+sleep 5
+
 # Check if deployment deploy is successful
 if ! kubectl get deployment discovery-deployment &> /dev/null; then
   echo "Failed to create new kubernetes deployment resources"
@@ -46,6 +48,8 @@ else
       echo "Apply existing kubernetes service resources..."
       kubectl apply -f ./service-prod.yml
     fi
+
+    sleep 5
 
     # Check if service deploy is successful
     if ! kubectl get service discovery-service &> /dev/null; then
